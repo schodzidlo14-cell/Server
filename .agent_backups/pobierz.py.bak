@@ -1,0 +1,39 @@
+import urllib.request
+import json
+
+print("Pobieranie bezpośredniego linku do PaperMC 1.21.4...")
+try:
+    # Używamy oficjalnego punktu końcowego v2 dla buildów
+    versions_url = "https://api.papermc.io/v2/projects/paper/versions/1.21.4"
+    req = urllib.request.Request(
+        versions_url, 
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    with urllib.request.urlopen(req) as response:
+        data = json.loads(response.read().decode())
+        builds = data["builds"]
+        latest_build = builds[-1]
+
+    jar_url = f"https://api.papermc.io/v2/projects/paper/versions/1.21.4/builds/{latest_build}/downloads/paper-1.21.4-{latest_build}.jar"
+    print(f"Pobieranie pliku z: {jar_url}")
+    
+    jar_req = urllib.request.Request(
+        jar_url,
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    with urllib.request.urlopen(jar_req) as u, open("server.jar", "wb") as f:
+        f.write(u.read())
+
+    with open("eula.txt", "w") as f:
+        f.write("eula=true\n")
+
+    with open("server.properties", "w") as f:
+        f.write("server-port=25565\nonline-mode=false\nenable-query=false\n")
+
+    with open("start.bat", "w") as f:
+        f.write("java -Xmx2G -Xms2G -jar server.jar nogui\npause\n")
+
+    print("SUKCES! Pliki serwera zostały pobrane i skonfigurowane.")
+except Exception as e:
+    print(f"Błąd podczas pobierania: {e}")
+    print("Spróbuj pobrać silnik ręcznie z oficjalnej strony PaperMC i nazwij plik 'server.jar'.")

@@ -1,0 +1,10 @@
+# Ignoruj logi, cache i tymczasowe
+logs/
+cache/
+*.log
+hs_err_pid*.log
+
+# Opcjonalnie: Jeśli nie chcesz trzymać światów w gicie (zalecane przy produkcji, bo światy rosną):
+# world/
+# world_nether/
+# world_the_end/
